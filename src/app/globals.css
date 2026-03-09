@@ -1,0 +1,356 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Indie+Flower&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #fef9f0;
+  --paper-warm: #fdf3e0;
+  --line-blue: #b8d4f0;
+  --margin-red: #f4a0a0;
+  --ring-gray: #8b8b8b;
+  --ink-dark: #2c2c6e;
+  --ink-blue: #1a3a7a;
+  --pencil: #4a4a4a;
+  --highlight-yellow: #fff176;
+  --sticky-pink: #ffe0f0;
+  --sticky-blue: #e0f0ff;
+  --sticky-green: #e0ffe8;
+  --doodle: #3a3a5c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Patrick Hand', cursive;
+  background-color: #e8e0d0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(184,212,240,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(244,160,160,0.08) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+/* Notebook paper texture */
+.notebook-paper {
+  background-color: var(--paper);
+  background-image:
+    /* Margin red line */
+    linear-gradient(90deg, transparent 59px, var(--margin-red) 59px, var(--margin-red) 61px, transparent 61px),
+    /* Horizontal lines */
+    repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      var(--line-blue) 31px,
+      var(--line-blue) 32px
+    );
+  background-size: 100% 100%, 100% 32px;
+  line-height: 32px;
+}
+
+/* Notebook card with rings */
+.notebook-card {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 59px, var(--margin-red) 59px, var(--margin-red) 61px, transparent 61px),
+    repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      var(--line-blue) 31px,
+      var(--line-blue) 32px
+    );
+  background-size: 100% 100%, 100% 32px;
+  border-radius: 4px 8px 8px 4px;
+  box-shadow: 3px 4px 12px rgba(0,0,0,0.18), -1px -1px 4px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.notebook-card::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: linear-gradient(135deg, #c0c0c0 25%, #a0a0a0 50%, #c0c0c0 75%);
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset -2px 0 4px rgba(0,0,0,0.2);
+}
+
+/* Ring holes */
+.ring-holes {
+  position: absolute;
+  left: -8px;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 10;
+}
+
+.ring-hole {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #d0c8b8;
+  border: 2.5px solid #9a9a9a;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(255,255,255,0.6);
+  position: relative;
+}
+
+/* Spiral/ring decoration on top */
+.spiral-top {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 18px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+.spiral-ring {
+  width: 20px;
+  height: 18px;
+  border: 3px solid var(--ring-gray);
+  border-bottom: none;
+  border-radius: 50% 50% 0 0;
+  background: transparent;
+  position: relative;
+}
+
+.spiral-ring::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--ring-gray);
+  border-radius: 50%;
+}
+
+/* Hand-drawn button style */
+.btn-drawn {
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border: 2.5px solid var(--ink-dark);
+  background: var(--highlight-yellow);
+  color: var(--ink-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 3px 3px 0px var(--ink-dark);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-drawn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--ink-dark);
+  background: #ffee58;
+}
+
+.btn-drawn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--ink-dark);
+}
+
+.btn-drawn-primary {
+  background: #a8d5f0;
+  border-color: var(--ink-blue);
+  box-shadow: 3px 3px 0px var(--ink-blue);
+  color: var(--ink-blue);
+}
+
+.btn-drawn-primary:hover {
+  background: #7ec8f5;
+  box-shadow: 4px 4px 0px var(--ink-blue);
+}
+
+.btn-drawn-danger {
+  background: #ffb3b3;
+  border-color: #cc2222;
+  box-shadow: 3px 3px 0px #cc2222;
+  color: #cc2222;
+}
+
+/* Input hand-drawn */
+.input-drawn {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid var(--ink-dark);
+  outline: none;
+  width: 100%;
+  padding: 4px 2px;
+  color: var(--ink-dark);
+  transition: border-color 0.2s;
+}
+
+.input-drawn:focus {
+  border-bottom-color: #4a90e2;
+  border-bottom-width: 3px;
+}
+
+.input-drawn::placeholder {
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+/* Task card */
+.task-card {
+  background: var(--sticky-blue);
+  border: 2px solid rgba(74, 144, 226, 0.4);
+  border-radius: 2px 12px 2px 12px;
+  padding: 12px 16px;
+  position: relative;
+  box-shadow: 2px 3px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 8px;
+}
+
+.task-card:nth-child(even) {
+  background: var(--sticky-pink);
+  border-color: rgba(226, 100, 130, 0.4);
+  transform: rotate(0.3deg);
+}
+
+.task-card:nth-child(3n) {
+  background: var(--sticky-green);
+  border-color: rgba(80, 180, 100, 0.4);
+  transform: rotate(-0.4deg);
+}
+
+.task-card:hover {
+  transform: translateY(-2px) rotate(0deg) !important;
+  box-shadow: 3px 5px 12px rgba(0,0,0,0.15);
+}
+
+/* Checkbox hand-drawn */
+.checkbox-drawn {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--ink-dark);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.checkbox-drawn.checked {
+  background: #a8d5f0;
+}
+
+/* Doodle decorations */
+.doodle-star {
+  display: inline-block;
+  color: var(--doodle);
+  font-size: 1.4rem;
+  animation: wobble 3s infinite ease-in-out;
+}
+
+.doodle-arrow {
+  display: inline-block;
+  font-size: 1.2rem;
+  animation: bounce-x 1.5s infinite ease-in-out;
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes bounce-x {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(20px) rotate(-1deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0deg); }
+}
+
+.float-in {
+  animation: float-in 0.4s ease-out forwards;
+}
+
+/* Page title handwritten style */
+.page-title {
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  color: var(--ink-dark);
+  text-shadow: 2px 2px 0px rgba(44, 44, 110, 0.15);
+}
+
+/* Tape decoration */
+.tape {
+  position: absolute;
+  background: rgba(255, 240, 150, 0.7);
+  border: 1px solid rgba(200, 180, 0, 0.3);
+  padding: 4px 16px;
+  font-size: 0.7rem;
+  z-index: 20;
+}
+
+.tape-top {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 80px;
+  height: 20px;
+}
+
+/* Priority badges */
+.priority-high {
+  background: #ffb3b3;
+  border: 1.5px solid #e55;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.85rem;
+  padding: 1px 8px;
+  color: #c00;
+}
+
+.priority-med {
+  background: #ffe0a0;
+  border: 1.5px solid #cc8800;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.85rem;
+  padding: 1px 8px;
+  color: #885500;
+}
+
+.priority-low {
+  background: #b3ffb3;
+  border: 1.5px solid #22aa22;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  font-family: 'Caveat', cursive;
+  font-size: 0.85rem;
+  padding: 1px 8px;
+  color: #116611;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #e0d8c8; }
+::-webkit-scrollbar-thumb { background: #b0a898; border-radius: 4px; }
