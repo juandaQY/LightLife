@@ -8,28 +8,77 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'caveat': ['Caveat', 'cursive'],
-        'patrick': ['Patrick Hand', 'cursive'],
-        'indie': ['Indie Flower', 'cursive'],
+        handwriting: ['"Caveat"', 'cursive'],
+        handwriting2: ['"Kalam"', 'cursive'],
+        sketch: ['"Patrick Hand"', 'cursive'],
+        body: ['"Nunito"', 'sans-serif'],
       },
       colors: {
-        'notebook': {
-          paper: '#fef9f0',
-          line: '#b8d4f0',
-          margin: '#f4a0a0',
-          ring: '#8b8b8b',
-          ink: '#2c2c6e',
-          pencil: '#555555',
-          doodle: '#3a3a5c',
-        }
+        paper: {
+          50:  '#fefdf8',
+          100: '#fdf9ec',
+          200: '#faf3d3',
+          300: '#f5e9b3',
+          400: '#edd882',
+          500: '#e0c45a',
+        },
+        ink: {
+          light:  '#4a3728',
+          DEFAULT:'#2c1a0e',
+          dark:   '#1a0f08',
+        },
+        washi: {
+          sage:   '#a8b89a',
+          rose:   '#d4a5a5',
+          sky:    '#a5c4d4',
+          wheat:  '#d4c4a5',
+          lavender: '#c4a5d4',
+          coral:  '#d4a5a5',
+          mint:   '#a5d4c4',
+        },
+        cork:  '#c9a87c',
+        tape:  '#f0e6a0',
       },
       backgroundImage: {
-        'notebook-lines': 'repeating-linear-gradient(transparent, transparent 31px, #b8d4f0 31px, #b8d4f0 32px)',
+        'paper-texture': "url('/textures/paper.svg')",
+        'grid-lines':    "url('/textures/grid.svg')",
       },
       boxShadow: {
-        'notebook': '2px 3px 8px rgba(0,0,0,0.15), -1px -1px 3px rgba(0,0,0,0.05)',
-        'ring': 'inset 0 0 0 3px #8b8b8b',
-      }
+        'paper':    '2px 3px 8px rgba(44,26,14,0.15), 0 1px 2px rgba(44,26,14,0.08)',
+        'paper-lg': '4px 6px 16px rgba(44,26,14,0.18), 0 2px 4px rgba(44,26,14,0.10)',
+        'pin':      '0 2px 6px rgba(44,26,14,0.4)',
+        'tape':     '1px 2px 4px rgba(44,26,14,0.12)',
+        'pressed':  'inset 1px 2px 4px rgba(44,26,14,0.15)',
+        'btn-sketch': '3px 3px 0px rgba(44,26,14,0.25)',
+      },
+      borderRadius: {
+        'paper': '2px',
+        'sketch': '255px 15px 225px 15px / 15px 225px 15px 255px',
+      },
+      animation: {
+        'float':      'float 3s ease-in-out infinite',
+        'wiggle':     'wiggle 0.3s ease-in-out',
+        'peel':       'peel 0.4s ease-out',
+        'scribble':   'scribble 0.6s ease-in-out',
+      },
+      keyframes: {
+        float: {
+          '0%,100%': { transform: 'translateY(0px) rotate(-1deg)' },
+          '50%':     { transform: 'translateY(-6px) rotate(0.5deg)' },
+        },
+        wiggle: {
+          '0%,100%': { transform: 'rotate(-1deg)' },
+          '50%':     { transform: 'rotate(1deg)' },
+        },
+        peel: {
+          '0%':   { transform: 'scale(0.95) rotate(-2deg)', opacity: '0' },
+          '100%': { transform: 'scale(1) rotate(0deg)',     opacity: '1' },
+        },
+        scribble: {
+          '0%':   { strokeDashoffset: '1000' },
+          '100%': { strokeDashoffset: '0' },
+        },
+      },
     },
   },
   plugins: [],

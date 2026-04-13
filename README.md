@@ -1,91 +1,116 @@
-# 📓 LightLife
+# 📓 LiteLife — Tu agenda de papel
 
-Tu libreta de tareas personal — diseño skeuomórfico estilo cuaderno escolar.
+LiteLife es una app de gestión de horario con estética **skeuomorphic** (papel, tinta, washi tape).  
+Construida con **Next.js 14 · Tailwind CSS · Prisma · NextAuth · dnd-kit**.
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+## 🚀 Setup rápido
 
-### 1. Clona el repositorio
-
-```bash
-git clone https://github.com/TU_USUARIO/TU_REPO.git
-cd lightlife
-```
-
-### 2. Instala las dependencias
+### 1. Instala dependencias
 
 ```bash
 npm install
 ```
 
-> Esto descarga todo lo necesario para que el proyecto funcione. Solo hay que hacerlo una vez.
+### 2. Configura variables de entorno
 
-### 3. Arranca el servidor
+```bash
+cp .env.example .env
+```
+
+Edita `.env` con:
+- `DATABASE_URL` — tu PostgreSQL (puedes usar [Railway](https://railway.app) o local)
+- `NEXTAUTH_SECRET` — genera con `openssl rand -base64 32`
+- `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` — desde [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+
+### 3. Configura Google OAuth
+
+En Google Cloud Console:
+1. Crea un proyecto → APIs & Services → Credentials → OAuth 2.0 Client ID
+2. Tipo: **Web application**
+3. Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
+
+### 4. Base de datos
+
+```bash
+npx prisma db push        # crea tablas
+npx prisma studio         # opcional: UI visual
+```
+
+### 5. Corre el proyecto
 
 ```bash
 npm run dev
 ```
 
-### 4. Abre en el navegador
-
-```
-http://localhost:3000
-```
-
----
-
-## 📄 Páginas disponibles
-
-| Ruta | Descripción |
-|------|-------------|
-| `/` | Página principal — agregar y gestionar tareas |
-| `/login` | Iniciar sesión |
-| `/registro` | Crear cuenta nueva |
-| `/dashboard` | Panel principal (próximamente) |
-| `/dashboard/usuario` | Perfil de usuario (próximamente) |
-| `/dashboard/empresa` | Panel de empresa (próximamente) |
-
----
-
-## 🛠️ Tecnologías usadas
-
-- **Next.js 14** — framework de React para las páginas y rutas
-- **Tailwind CSS** — utilidades de estilo
-- **CSS puro** — toda la estética de libreta hecha a mano en `globals.css`
-- **Google Fonts** — Caveat, Patrick Hand, Indie Flower
+Abre [http://localhost:3000](http://localhost:3000) →  `/login`
 
 ---
 
 ## 📁 Estructura del proyecto
 
 ```
-src/
-├── app/
-│   ├── layout.jsx
-│   ├── page.jsx            ← página principal
-│   ├── globals.css         ← estilos de la libreta
-│   ├── (auth)/
-│   │   ├── login/
-│   │   └── registro/
-│   └── dashboard/
-│       ├── usuario/
-│       └── empresa/
-├── components/
-│   ├── Calendario.jsx
-│   └── TareaForm.jsx
-└── lib/
-    ├── db.js
-    └── utils.js
+litelife/
+├── prisma/
+│   └── schema.prisma          # Modelos: User, Task, Schedule
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── auth/          # NextAuth + Register
+│   │   │   ├── tasks/         # CRUD tareas
+│   │   │   └── schedules/     # CRUD + conflictos + drag
+│   │   ├── login/             # Página login
+│   │   ├── register/          # Página registro
+│   │   └── dashboard/         # Calendario + panel tareas
+│   ├── components/
+│   │   ├── auth/              # SessionProvider
+│   │   ├── calendar/          # WeekCalendar, CalendarCell
+│   │   ├── tasks/             # TaskPanel, TaskCard, Modales
+│   │   └── ui/                # Sidebar
+│   ├── lib/
+│   │   ├── auth.ts            # NextAuth config
+│   │   └── prisma.ts          # Cliente Prisma singleton
+│   ├── types/                 # TypeScript interfaces
+│   └── styles/
+│       └── globals.css        # Sistema de diseño skeuomorphic
+└── tailwind.config.js         # Tokens: paper, ink, washi, cork
 ```
 
 ---
 
-## ⚠️ Notas
+## ✨ Features (v0.1)
 
-- Las tareas se guardan en memoria — al recargar la página se borran. Próximamente se conectará una base de datos.
-- La carpeta `node_modules` no está incluida en el repositorio. Ejecuta `npm install` para generarla.
+- [x] Login con Google OAuth
+- [x] Login/Registro con email + contraseña
+- [x] Crear tareas con color washi, duración y descripción
+- [x] Calendario semanal (Lun–Dom) por horas
+- [x] Programar tareas en fecha/hora específica
+- [x] Tareas recurrentes (días de la semana)
+- [x] Drag & Drop para mover tareas en el calendario
+- [x] Resolución automática de conflictos (desplaza 1h)
+- [x] Diseño skeuomorphic: papel, tape, tinta, corcho
+
+## 🗺️ Roadmap
+
+- [ ] React Native app (compartir lógica de tipos y API)
+- [ ] Vista mensual del calendario
+- [ ] Notificaciones / recordatorios
+- [ ] Colores y etiquetas personalizadas
+- [ ] Exportar a PDF (como hoja de papel impresa)
+- [ ] Modo oscuro (pizarra)
 
 ---
 
-*✏️ LightLife — tu cuaderno digital*
+## 🎨 Sistema de diseño
+
+| Token | Valor | Uso |
+|---|---|---|
+| `paper-card` | Clase CSS | Tarjetas con textura de papel |
+| `btn-sketch` | Clase CSS | Botones con borde dibujado |
+| `input-sketch` | Clase CSS | Inputs con línea discontinua |
+| `sticky-note` | Clase CSS | Nota adhesiva amarilla |
+| `washi-h` | Clase CSS | Tira washi tape horizontal |
+| `font-handwriting` | Caveat | Texto estilo letra a mano |
+| `cork` | `#c9a87c` | Fondo tablón de corcho |
+| `washi-sage/rose/sky...` | Colores | Paleta washi tape |
