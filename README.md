@@ -1,116 +1,50 @@
-# 📓 LiteLife — Tu agenda de papel
+# Welcome to your Expo app 👋
 
-LiteLife es una app de gestión de horario con estética **skeuomorphic** (papel, tinta, washi tape).  
-Construida con **Next.js 14 · Tailwind CSS · Prisma · NextAuth · dnd-kit**.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
----
+## Get started
 
-## 🚀 Setup rápido
+1. Install dependencies
 
-### 1. Instala dependencias
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-```
+2. Start the app
 
-### 2. Configura variables de entorno
+   ```bash
+   npx expo start
+   ```
 
-```bash
-cp .env.example .env
-```
+In the output, you'll find options to open the app in a
 
-Edita `.env` con:
-- `DATABASE_URL` — tu PostgreSQL (puedes usar [Railway](https://railway.app) o local)
-- `NEXTAUTH_SECRET` — genera con `openssl rand -base64 32`
-- `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` — desde [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-### 3. Configura Google OAuth
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-En Google Cloud Console:
-1. Crea un proyecto → APIs & Services → Credentials → OAuth 2.0 Client ID
-2. Tipo: **Web application**
-3. Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
+## Get a fresh project
 
-### 4. Base de datos
+When you're ready, run:
 
 ```bash
-npx prisma db push        # crea tablas
-npx prisma studio         # opcional: UI visual
+npm run reset-project
 ```
 
-### 5. Corre el proyecto
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-```bash
-npm run dev
-```
+## Learn more
 
-Abre [http://localhost:3000](http://localhost:3000) →  `/login`
+To learn more about developing your project with Expo, look at the following resources:
 
----
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## 📁 Estructura del proyecto
+## Join the community
 
-```
-litelife/
-├── prisma/
-│   └── schema.prisma          # Modelos: User, Task, Schedule
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── auth/          # NextAuth + Register
-│   │   │   ├── tasks/         # CRUD tareas
-│   │   │   └── schedules/     # CRUD + conflictos + drag
-│   │   ├── login/             # Página login
-│   │   ├── register/          # Página registro
-│   │   └── dashboard/         # Calendario + panel tareas
-│   ├── components/
-│   │   ├── auth/              # SessionProvider
-│   │   ├── calendar/          # WeekCalendar, CalendarCell
-│   │   ├── tasks/             # TaskPanel, TaskCard, Modales
-│   │   └── ui/                # Sidebar
-│   ├── lib/
-│   │   ├── auth.ts            # NextAuth config
-│   │   └── prisma.ts          # Cliente Prisma singleton
-│   ├── types/                 # TypeScript interfaces
-│   └── styles/
-│       └── globals.css        # Sistema de diseño skeuomorphic
-└── tailwind.config.js         # Tokens: paper, ink, washi, cork
-```
+Join our community of developers creating universal apps.
 
----
-
-## ✨ Features (v0.1)
-
-- [x] Login con Google OAuth
-- [x] Login/Registro con email + contraseña
-- [x] Crear tareas con color washi, duración y descripción
-- [x] Calendario semanal (Lun–Dom) por horas
-- [x] Programar tareas en fecha/hora específica
-- [x] Tareas recurrentes (días de la semana)
-- [x] Drag & Drop para mover tareas en el calendario
-- [x] Resolución automática de conflictos (desplaza 1h)
-- [x] Diseño skeuomorphic: papel, tape, tinta, corcho
-
-## 🗺️ Roadmap
-
-- [ ] React Native app (compartir lógica de tipos y API)
-- [ ] Vista mensual del calendario
-- [ ] Notificaciones / recordatorios
-- [ ] Colores y etiquetas personalizadas
-- [ ] Exportar a PDF (como hoja de papel impresa)
-- [ ] Modo oscuro (pizarra)
-
----
-
-## 🎨 Sistema de diseño
-
-| Token | Valor | Uso |
-|---|---|---|
-| `paper-card` | Clase CSS | Tarjetas con textura de papel |
-| `btn-sketch` | Clase CSS | Botones con borde dibujado |
-| `input-sketch` | Clase CSS | Inputs con línea discontinua |
-| `sticky-note` | Clase CSS | Nota adhesiva amarilla |
-| `washi-h` | Clase CSS | Tira washi tape horizontal |
-| `font-handwriting` | Caveat | Texto estilo letra a mano |
-| `cork` | `#c9a87c` | Fondo tablón de corcho |
-| `washi-sage/rose/sky...` | Colores | Paleta washi tape |
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
