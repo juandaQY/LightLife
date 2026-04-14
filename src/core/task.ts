@@ -1,29 +1,28 @@
-// Arquitectura: guia 6 punto 2, aqui se adapta la clase Entidad con encapsulamiento estricto.
-// Responsabilidad: Representar la identidad y configuración del usuario.
+// Arquitectura: guia 6 punto 2, aqui se adapta el modelado de la entidad Task.
+// Responsabilidad: Gestionar los datos de las tareas/notas adhesivas.
 
-export class User {
-    // Atributos privados para proteger la integridad del objeto
+export class Task {
     private _id?: number;
-    private _name: string;
-    private _email: string;
-    private _password?: string;
+    private _title: string;
+    private _colIndex: number;
+    private _rowIndex: number;
+    private _rowSpan: number;
+    private _userId: number;
 
-    constructor(name: string, email: string, id?: number) {
-        this._name = name;
-        this._email = email;
-        this._id = id;
+    constructor(title: string, col: number, row: number, span: number, userId: number) {
+        this._title = title;
+        this._colIndex = col;
+        this._rowIndex = row;
+        this._rowSpan = span;
+        this._userId = userId;
     }
 
-    // Getters y Setters públicos
-    public get id(): number | undefined { return this._id; }
-    public set id(value: number | undefined) { this._id = value; }
+    // Encapsulamiento mediante métodos de acceso
+    public get title(): string { return this._title; }
+    public set title(v: string) { this._title = v; }
 
-    public get name(): string { return this._name; }
-    public set name(value: string) { this._name = value; }
-
-    public get email(): string { return this._email; }
-    public set email(value: string) { this._email = value; }
-
-    public get password(): string | undefined { return this._password; }
-    public set password(value: string | undefined) { this._password = value; }
+    public get colIndex(): number { return this._colIndex; }
+    public get rowIndex(): number { return this._rowIndex; }
+    public get rowSpan(): number { return this._rowSpan; }
+    public get userId(): number { return this._userId; }
 }
