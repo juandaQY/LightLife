@@ -1,20 +1,19 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 
+// Arquitectura: guia 5 punto 1, aqui se adapta la reducción de acoplamiento aislando la importación de PostgreSQL a su propia clase.
+import Database from './src/config/database';
+
 dotenv.config();
 
-const connectionString = process.env.DATABASE_URL as string;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-
 const app = express();
-const prisma = new PrismaClient({ adapter });
+
+// Arquitectura: guia 5 punto 3, aqui se adapta la invocación del Singleton para obtener la instancia única de la base de datos.
+const prisma = Database.getInstance().prisma;
+
 app.use(cors());
 app.use(express.json());
 
@@ -103,13 +102,13 @@ app.get('/api/calendar', authenticate, async (req: Request, res: Response) => {
       tasks: user.tasks
     });
   } catch (error) {
-    // 👇 ESTO ES LO NUEVO: Imprimirá el error real en tu consola 👇
     console.error("\n❌ ERROR FATAL EN BASE DE DATOS:");
     console.error(error);
     console.error("----------------------------------\n");
     res.status(500).json({ error: 'Error al obtener datos' });
   }
 });
+
 // 2. Guardar la configuración inicial (Onboarding)
 app.post('/api/config', authenticate, async (req: Request, res: Response) => {
   const { startHour, totalHours, interval } = req.body;
@@ -126,10 +125,10 @@ app.post('/api/config', authenticate, async (req: Request, res: Response) => {
 
 // 3. Crear una nueva tarea
 app.post('/api/tasks', authenticate, async (req: Request, res: Response) => {
-  const { title, colIndex, rowIndex, rowSpan } = req.body; // <-- Añade rowSpan aquí
+  const { title, colIndex, rowIndex, rowSpan } = req.body; 
   try {
     const task = await prisma.task.create({
-      data: { title, colIndex, rowIndex, rowSpan, userId: req.userId as number } // <-- Añade rowSpan aquí
+      data: { title, colIndex, rowIndex, rowSpan, userId: req.userId as number } 
     });
     res.json(task);
   } catch (error) {
@@ -139,9 +138,8 @@ app.post('/api/tasks', authenticate, async (req: Request, res: Response) => {
 
 // 4. Actualizar posiciones de tareas (soporta múltiples tareas a la vez)
 app.put('/api/tasks/positions', authenticate, async (req: Request, res: Response) => {
-  const { updates } = req.body; // updates es un arreglo: [{ id: 1, colIndex: 2, rowIndex: 3 }]
+  const { updates } = req.body; 
   try {
-    // Actualizamos todas las tareas de golpe usando una transacción
     const updatePromises = updates.map((t: any) => 
       prisma.task.update({
         where: { id: t.id },
