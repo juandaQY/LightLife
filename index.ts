@@ -1,24 +1,22 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 
+// Punto 1 guia 5: Solución al acoplamiento. Se importa el módulo centralizado en lugar de inicializar la BD aquí.
+import DatabaseSingleton from './database';
+
 dotenv.config();
 
-const connectionString = process.env.DATABASE_URL as string;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-
 const app = express();
-const prisma = new PrismaClient({ adapter });
+
+// Punto 3 guia 5: Uso del patrón Singleton. Obtenemos la instancia única de la base de datos.
+const prisma = DatabaseSingleton.getInstance().getClient();
+
 app.use(cors());
 app.use(express.json());
 
-// Ampliar la interfaz de Express para incluir userId en las peticiones
 declare global {
   namespace Express {
     interface Request {
@@ -27,7 +25,6 @@ declare global {
   }
 }
 
-// 🛡️ MIDDLEWARE: Verificar si el usuario está logueado
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'No token provided' });
@@ -36,7 +33,6 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
     
-    // 👇 NUEVO ESCUDO: Si el ID es de la versión vieja (texto), rechazamos el token
     if (typeof decoded.userId !== 'number') {
       return res.status(401).json({ error: 'Invalid token' }); 
     }
@@ -48,13 +44,11 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// ==========================================
-// 🔐 RUTAS DE AUTENTICACIÓN
-// ==========================================
 app.post('/auth/register', async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    // Punto 1 guia 5: Se utiliza el cliente instanciado por el Singleton, mejorando la cohesión.
     const user = await prisma.user.create({
       data: { name, email, password: hashedPassword }
     });
@@ -67,6 +61,7 @@ app.post('/auth/register', async (req: Request, res: Response) => {
 app.post('/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
+    // Punto 1 guia 5: Uso de la variable `prisma` centralizada.
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
@@ -80,16 +75,11 @@ app.post('/auth/login', async (req: Request, res: Response) => {
   }
 });
 
-// ==========================================
-// 📅 RUTAS DEL CALENDARIO Y TAREAS
-// ==========================================
-
-// 1. Obtener la configuración y todas las tareas del usuario al iniciar
 app.get('/api/calendar', authenticate, async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      include: { tasks: true } // Trae todas las tareas del usuario
+      include: { tasks: true }
     });
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
     
@@ -103,14 +93,13 @@ app.get('/api/calendar', authenticate, async (req: Request, res: Response) => {
       tasks: user.tasks
     });
   } catch (error) {
-    // 👇 ESTO ES LO NUEVO: Imprimirá el error real en tu consola 👇
     console.error("\n❌ ERROR FATAL EN BASE DE DATOS:");
     console.error(error);
     console.error("----------------------------------\n");
     res.status(500).json({ error: 'Error al obtener datos' });
   }
 });
-// 2. Guardar la configuración inicial (Onboarding)
+
 app.post('/api/config', authenticate, async (req: Request, res: Response) => {
   const { startHour, totalHours, interval } = req.body;
   try {
@@ -124,7 +113,6 @@ app.post('/api/config', authenticate, async (req: Request, res: Response) => {
   }
 });
 
-// 3. Crear una nueva tarea
 app.post('/api/tasks', authenticate, async (req: Request, res: Response) => {
   const { title, colIndex, rowIndex } = req.body;
   try {
@@ -137,11 +125,9 @@ app.post('/api/tasks', authenticate, async (req: Request, res: Response) => {
   }
 });
 
-// 4. Actualizar posiciones de tareas (soporta múltiples tareas a la vez)
 app.put('/api/tasks/positions', authenticate, async (req: Request, res: Response) => {
-  const { updates } = req.body; // updates es un arreglo: [{ id: 1, colIndex: 2, rowIndex: 3 }]
+  const { updates } = req.body;
   try {
-    // Actualizamos todas las tareas de golpe usando una transacción
     const updatePromises = updates.map((t: any) => 
       prisma.task.update({
         where: { id: t.id },
