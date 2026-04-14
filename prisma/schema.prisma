@@ -1,3 +1,7 @@
+-- Arquitectura: guia 6 punto 1, aqui se adapta el esquema de base de datos relacional.
+-- Definición de la estructura para PostgreSQL (equivalente a MySQL solicitado).
+
+
 generator client {
   provider = "prisma-client-js"
 }
