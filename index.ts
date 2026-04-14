@@ -4,14 +4,14 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 
-// Punto 1 guia 5: Solución al acoplamiento. Se importa el módulo centralizado en lugar de inicializar la BD aquí.
+// Punto 1 guia 5 Arquitectura: Solución al acoplamiento. Se importa el módulo centralizado en lugar de inicializar la BD aquí.
 import DatabaseSingleton from './database';
 
 dotenv.config();
 
 const app = express();
 
-// Punto 3 guia 5: Uso del patrón Singleton. Obtenemos la instancia única de la base de datos.
+// Punto 3 guia 5 Arquitectura: Uso del patrón Singleton. Obtenemos la instancia única de la base de datos.
 const prisma = DatabaseSingleton.getInstance().getClient();
 
 app.use(cors());
@@ -48,7 +48,7 @@ app.post('/auth/register', async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    // Punto 1 guia 5: Se utiliza el cliente instanciado por el Singleton, mejorando la cohesión.
+    // Punto 1 guia 5 Arquitectura: Se utiliza el cliente instanciado por el Singleton, mejorando la cohesión.
     const user = await prisma.user.create({
       data: { name, email, password: hashedPassword }
     });
@@ -61,7 +61,7 @@ app.post('/auth/register', async (req: Request, res: Response) => {
 app.post('/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    // Punto 1 guia 5: Uso de la variable `prisma` centralizada.
+    // Punto 1 guia 5 Arquitectura: Uso de la variable `prisma` centralizada.
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
 
