@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password      String
+  
+  // Nuevos campos de configuración del calendario
+  startHour     Float    @default(6)
+  totalHours    Float    @default(16)
+  interval      Float    @default(1)
+  hasConfigured Boolean  @default(false)
+  
+  // Relación: Un usuario tiene muchas tareas
+  tasks         Task[]
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  title     String
+  colIndex  Int      
+  rowIndex  Int      
+  rowSpan   Int      @default(1) // <--- ¡NUEVO! Tamaño de la tarea
+  
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
